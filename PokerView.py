@@ -2,12 +2,12 @@ import pygame
 import os,sys
 import PokerModel
 
-HEIGHT = 720
-WIDTH = 1280
+HEIGHT = 720    #game canvas height
+WIDTH = 1280    #game canvas width
 
 #Global constants here
 BLACK = (255,255,255)
-BLACK = (0,0,0)
+BLACK = (0,0,0)        #real number is 0,0,0
 GREY  = (50,50,50)
 RED  = (207,0,0)
 
@@ -108,10 +108,10 @@ class Control:
 
 		#setup the locations for each card in the hand
 		x = 4.5 * int(self.scale * self.cardSize[0])
-		self.youLoc = (x - 150, self.buffer)
+		self.youLoc = (x - 150, self.buffer)    #yaccDL switch hand and AI up and down
 
 		for index in range(len(self.poker.playerHand)):
-			self.cardLoc[index] = (x, self.buffer)
+			self.cardLoc[index] = (x, self.buffer)        #yaccDL switch hand and AI up and down
 			x += int(self. scale * self.cardSize[0])/6    #yaccDL overlap cards
 
 		#setup the text that will be printed to the screen
@@ -166,18 +166,18 @@ class Control:
 		#display the player's hand
 		for index in range(len(self.poker.playerHand)):
 			if not self.poker.playerHand[index].selected:
-				SCREEN.blit(self.images[str(self.poker.playerHand[index])], self.cardLoc[index])
+				SCREEN.blit(self.images[str(self.poker.playerHand[index])], self.cardLoc[index])    #yaccDL switch hand and AI up and down 
 			else:
 				#make the card a little big higher to signify the chosed card
 				#SCREEN.blit(self.cardBack, (self.cardLoc[index][0],self.cardLoc[index][1]-10))
-				#and do not backside the card, only move the card when chosed
+				#and do not backside the card, only move the card when chosed                       #yaccDL switch hand and AI up and down
 				SCREEN.blit(self.images[str(self.poker.playerHand[index])], (self.cardLoc[index][0],self.cardLoc[index][1]-10))
 
 		#display the text
-		SCREEN.blit(self.youText, self.youLoc)
+		SCREEN.blit(self.youText, self.youLoc)               #yaccDL switch hand and AI up and down
 		pygame.draw.rect(SCREEN, RED, self.buttonRect)
 		pygame.draw.rect(SCREEN, BLACK, self.buttonRectOutline, 2)
-		SCREEN.blit(self.replaceButton, self.buttonLoc)
+		SCREEN.blit(self.replaceButton, self.buttonLoc)      #yaccDL switch hand and AI up and down
 
 		#display the scoreboard
 		self.display_scoreboard()
@@ -206,7 +206,7 @@ class Control:
 		playerScore = self.poker.convert_score(self.result[0])
 		self.youText = self.font.render(playerScore, 1, BLACK)
 		self.youSize = self.font.size(playerScore)
-		self.youLoc = (self.cardLoc[0][0],self.cardLoc[0][1] - 30)
+		self.youLoc = (self.cardLoc[0][0],self.cardLoc[0][1] - 30)    #yaccDL switch hand and AI up and down
 
 		comp1Score = self.poker.convert_score(self.result[1])
 		self.comp1Label = self.font.render(comp1Score, 1, BLACK)
@@ -216,7 +216,7 @@ class Control:
 		comp2Score = self.poker.convert_score(self.result[2])
 		self.comp2Label = self.font.render(comp2Score, 1, BLACK)
 		self.comp2LabelSize = self.font.size(comp2Score)
-		self.comp2LabelLoc = (self.comp2Loc[0], self.comp2Loc[1] - 30)
+		self.comp2LabelLoc = (self.comp2Loc[0], self.comp2Loc[1] - 30)    #yaccDL switch hand and AI up and down
 
 		comp3Score = self.poker.convert_score(self.result[3])
 		self.comp3Label = self.font.render(comp3Score, 1, BLACK)
@@ -255,10 +255,10 @@ class Control:
 		self.display_hand(self.poker.comp3Hand, self.comp3Loc[0], self.comp3Loc[1])
 
 		#print labels saing what each hand was
-		SCREEN.blit(self.youText, self.youLoc)
-		SCREEN.blit(self.comp1Label, self.comp1LabelLoc)
-		SCREEN.blit(self.comp2Label, self.comp2LabelLoc)
-		SCREEN.blit(self.comp3Label, self.comp3LabelLoc)
+		SCREEN.blit(self.youText, self.youLoc)             #yaccDL switch hand and AI up and down
+		SCREEN.blit(self.comp1Label, self.comp1LabelLoc)   #yaccDL switch hand and AI up and down
+		SCREEN.blit(self.comp2Label, self.comp2LabelLoc)   #yaccDL switch hand and AI up and down
+		SCREEN.blit(self.comp3Label, self.comp3LabelLoc)   #yaccDL switch hand and AI up and down
 
 		#display a score screen
 		self.display_scoreboard()
@@ -272,7 +272,7 @@ class Control:
 
 	def display_hand(self, hand, x, y):
 		for card in hand:
-			SCREEN.blit(self.images[str(card)], (x, y))
+			SCREEN.blit(self.images[str(card)], (x, y))    #yaccDL switch hand and AI up and down
 			x += int(self.scale * self.cardSize[0])/6    #yaccDL overlap cards
 
 	def display_scoreboard(self):
