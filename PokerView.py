@@ -112,7 +112,7 @@ class Control:
 
 		for index in range(len(self.poker.playerHand)):
 			self.cardLoc[index] = (x, self.buffer)
-			x += int(self. scale * self.cardSize[0])
+			x += int(self. scale * self.cardSize[0])/6    #yaccDL overlap cards
 
 		#setup the text that will be printed to the screen
 		self.font = pygame.font.Font('font/IndianPoker.ttf', 25)
@@ -126,7 +126,8 @@ class Control:
 		self.replaceButton = self.font2.render(" Replace ", 1, BLACK)
 		self.buttonSize =self.font2.size(" Replace ")
 
-		self.buttonLoc = (x + 30, self.buffer + self.scale * self.cardSize[1]/2 - self.buttonSize[1]/2)
+		#yaccDL set replace button one card right
+		self.buttonLoc = (x + self.scale * self.cardSize[0] + 30, self.buffer + self.scale * self.cardSize[1]/2 - self.buttonSize[1]/2)
 
 		self.buttonRect = pygame.Rect(self.buttonLoc, self.buttonSize)
 		self.buttonRectOutline = pygame.Rect(self.buttonLoc, self.buttonSize)
@@ -141,7 +142,9 @@ class Control:
 				if event.button == 1:
 					#create a rectangle for the mouse click and for each card.  check for intersection
 					mouseRect = pygame.Rect(event.pos, (1,1))
-					for index in range(len(self.poker.playerHand)):									#this minus thirty fixes a minor bug, do not remove
+					#this minus thirty fixes a minor bug, do not remove
+					#yaccDL make it reversed to adopt to verlaped card
+					for index in reversed(range(len(self.poker.playerHand))):	
 						cardRect = pygame.Rect(self.cardLoc[index], (int(self.scale * self.cardSize[0]), int(self.scale * self.cardSize[1])))
 						if cardRect.colliderect(mouseRect):
 							self.poker.playerHand[index].selected = not self.poker.playerHand[index].selected
@@ -165,7 +168,10 @@ class Control:
 			if not self.poker.playerHand[index].selected:
 				SCREEN.blit(self.images[str(self.poker.playerHand[index])], self.cardLoc[index])
 			else:
-				SCREEN.blit(self.cardBack, self.cardLoc[index])
+				#make the card a little big higher to signify the chosed card
+				#SCREEN.blit(self.cardBack, (self.cardLoc[index][0],self.cardLoc[index][1]-10))
+				#and do not backside the card, only move the card when chosed
+				SCREEN.blit(self.images[str(self.poker.playerHand[index])], (self.cardLoc[index][0],self.cardLoc[index][1]-10))
 
 		#display the text
 		SCREEN.blit(self.youText, self.youLoc)
@@ -267,7 +273,7 @@ class Control:
 	def display_hand(self, hand, x, y):
 		for card in hand:
 			SCREEN.blit(self.images[str(card)], (x, y))
-			x += int(self.scale * self.cardSize[0])
+			x += int(self.scale * self.cardSize[0])/6    #yaccDL overlap cards
 
 	def display_scoreboard(self):
 		#create labels for each player
