@@ -66,6 +66,7 @@ class Control:
 
 		self.startButton = self.font.render(" Start ", 1, BLACK)
 		self.buttonSize =self.font.size(" Start ")
+        #button Start Location
 		self.buttonLoc = (WIDTH/2 - self.buttonSize[0]/2, HEIGHT/2 - self.buttonSize[1]/2)
 
 		self.buttonRect = pygame.Rect(self.buttonLoc, self.buttonSize)
@@ -108,10 +109,12 @@ class Control:
 
 		#setup the locations for each card in the hand
 		x = 4.5 * int(self.scale * self.cardSize[0])
-		self.youLoc = (x - 150, self.buffer)    #yaccDL switch hand and AI up and down
+		#self.youLoc = (x - 150, self.buffer)    #yaccDL switch hand and AI up and down
+		self.youLoc = (x - 150, HEIGHT - self.scale * self.cardSize[1] - self.buffer)    #yaccDL switch hand and AI up and down
 
 		for index in range(len(self.poker.playerHand)):
-			self.cardLoc[index] = (x, self.buffer)        #yaccDL switch hand and AI up and down
+			#self.cardLoc[index] = (x, self.buffer)        #yaccDL switch hand and AI up and down
+			self.cardLoc[index] = (x, HEIGHT - self.scale * self.cardSize[1] - self.buffer)        #yaccDL switch hand and AI up and down
 			x += int(self. scale * self.cardSize[0])/6    #yaccDL overlap cards
 
 		#setup the text that will be printed to the screen
@@ -127,7 +130,9 @@ class Control:
 		self.buttonSize =self.font2.size(" Replace ")
 
 		#yaccDL set replace button one card right
-		self.buttonLoc = (x + self.scale * self.cardSize[0] + 30, self.buffer + self.scale * self.cardSize[1]/2 - self.buttonSize[1]/2)
+		#yaccDL put the replace button downside // Replace button location
+		#self.buttonLoc = (x + self.scale * self.cardSize[0] + 30, self.buffer + self.scale * self.cardSize[1]/2 - self.buttonSize[1]/2)
+		self.buttonLoc = (x + self.scale * self.cardSize[0] + 30, HEIGHT - self.buffer - self.scale * self.cardSize[1]/2 + self.buttonSize[1]/2)
 
 		self.buttonRect = pygame.Rect(self.buttonLoc, self.buttonSize)
 		self.buttonRectOutline = pygame.Rect(self.buttonLoc, self.buttonSize)
@@ -174,10 +179,10 @@ class Control:
 				SCREEN.blit(self.images[str(self.poker.playerHand[index])], (self.cardLoc[index][0],self.cardLoc[index][1]-10))
 
 		#display the text
-		SCREEN.blit(self.youText, self.youLoc)               #yaccDL switch hand and AI up and down
+		SCREEN.blit(self.youText, self.youLoc)
 		pygame.draw.rect(SCREEN, RED, self.buttonRect)
 		pygame.draw.rect(SCREEN, BLACK, self.buttonRectOutline, 2)
-		SCREEN.blit(self.replaceButton, self.buttonLoc)      #yaccDL switch hand and AI up and down
+		SCREEN.blit(self.replaceButton, self.buttonLoc)
 
 		#display the scoreboard
 		self.display_scoreboard()
@@ -190,7 +195,9 @@ class Control:
 		self.replaceButton = self.font2.render(" New Game ", 1, BLACK)
 		self.buttonSize =self.font2.size(" New Game ")
 
-		self.buttonLoc = (self.buttonLoc[0], self.buffer + self.scale * self.cardSize[1]/2 - self.buttonSize[1]/2)
+		#yaccDL put the replace button downside // New Game button location
+		#self.buttonLoc = (self.buttonLoc[0], self.buffer + self.scale * self.cardSize[1]/2 - self.buttonSize[1]/2)
+		self.buttonLoc = (self.buttonLoc[0], HEIGHT - self.buffer - self.scale * self.cardSize[1]/2 + self.buttonSize[1]/2)
 
 		self.buttonRect = pygame.Rect(self.buttonLoc, self.buttonSize)
 		self.buttonRectOutline = pygame.Rect(self.buttonLoc, self.buttonSize)
@@ -198,7 +205,9 @@ class Control:
 		#initialize variables for drawing the hands
 		self.comp1Loc = (self.buffer, HEIGHT / 2 - self.scale * self.cardSize[1]/2)
 		self.comp2Loc = (WIDTH - int(5 * self.scale * self.cardSize[0]) - self.buffer, HEIGHT / 2 - self.scale * self.cardSize[1]/2)
-		self.comp3Loc = ( 4.5 * int(self.scale * self.cardSize[0]), HEIGHT - self.scale * self.cardSize[1] - self.buffer)
+		#yaccDL switch hand and AI up and down
+		#self.comp3Loc = ( 4.5 * int(self.scale * self.cardSize[0]), HEIGHT - self.scale * self.cardSize[1] - self.buffer)
+		self.comp3Loc = ( 4.5 * int(self.scale * self.cardSize[0]), self.buffer)
 
 		self.result = self.poker.play_round()
 
@@ -216,12 +225,12 @@ class Control:
 		comp2Score = self.poker.convert_score(self.result[2])
 		self.comp2Label = self.font.render(comp2Score, 1, BLACK)
 		self.comp2LabelSize = self.font.size(comp2Score)
-		self.comp2LabelLoc = (self.comp2Loc[0], self.comp2Loc[1] - 30)    #yaccDL switch hand and AI up and down
+		self.comp2LabelLoc = (self.comp2Loc[0], self.comp2Loc[1] - 30)
 
 		comp3Score = self.poker.convert_score(self.result[3])
 		self.comp3Label = self.font.render(comp3Score, 1, BLACK)
 		self.comp3LabelSize = self.font.size(comp3Score)
-		self.comp3LabelLoc = (self.comp3Loc[0], self.comp3Loc[1] - 30)
+		self.comp3LabelLoc = (self.comp3Loc[0], self.comp3Loc[1] - 30)    #yaccDL switch hand and AI up and down
 
 	def results(self):
 		for event in pygame.event.get():
@@ -255,10 +264,10 @@ class Control:
 		self.display_hand(self.poker.comp3Hand, self.comp3Loc[0], self.comp3Loc[1])
 
 		#print labels saing what each hand was
-		SCREEN.blit(self.youText, self.youLoc)             #yaccDL switch hand and AI up and down
-		SCREEN.blit(self.comp1Label, self.comp1LabelLoc)   #yaccDL switch hand and AI up and down
-		SCREEN.blit(self.comp2Label, self.comp2LabelLoc)   #yaccDL switch hand and AI up and down
-		SCREEN.blit(self.comp3Label, self.comp3LabelLoc)   #yaccDL switch hand and AI up and down
+		SCREEN.blit(self.youText, self.youLoc)             
+		SCREEN.blit(self.comp1Label, self.comp1LabelLoc)   
+		SCREEN.blit(self.comp2Label, self.comp2LabelLoc)   
+		SCREEN.blit(self.comp3Label, self.comp3LabelLoc)   
 
 		#display a score screen
 		self.display_scoreboard()
@@ -270,7 +279,7 @@ class Control:
 
 		pygame.display.flip()
 
-	def display_hand(self, hand, x, y):
+	def display_hand(self, hand, x, y):    #yaccDL switch hand and AI up and down//display_hand
 		for card in hand:
 			SCREEN.blit(self.images[str(card)], (x, y))    #yaccDL switch hand and AI up and down
 			x += int(self.scale * self.cardSize[0])/6    #yaccDL overlap cards
