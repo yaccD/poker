@@ -130,9 +130,11 @@ class Control:
 		self.buttonSize =self.font2.size(" Replace ")
 
 		#yaccDL set replace button one card right
-		#yaccDL put the replace button downside // Replace button location
 		#self.buttonLoc = (x + self.scale * self.cardSize[0] + 30, self.buffer + self.scale * self.cardSize[1]/2 - self.buttonSize[1]/2)
-		self.buttonLoc = (x + self.scale * self.cardSize[0] + 30, HEIGHT - self.buffer - self.scale * self.cardSize[1]/2 + self.buttonSize[1]/2)
+		#yaccDL put the replace button downside // Replace button location
+		#self.buttonLoc = (x + self.scale * self.cardSize[0] + 30, HEIGHT - self.buffer - self.scale * self.cardSize[1]/2 + self.buttonSize[1]/2)
+		#yaccDL put the replace button rightside
+		self.buttonLoc = (WIDTH - self.buffer-self.buttonSize[0], HEIGHT - self.buffer - self.scale * self.cardSize[1]/2 + self.buttonSize[1]/2)
 
 		self.buttonRect = pygame.Rect(self.buttonLoc, self.buttonSize)
 		self.buttonRectOutline = pygame.Rect(self.buttonLoc, self.buttonSize)
@@ -195,19 +197,21 @@ class Control:
 		self.replaceButton = self.font2.render(" New Game ", 1, BLACK)
 		self.buttonSize =self.font2.size(" New Game ")
 
-		#yaccDL put the replace button downside // New Game button location
 		#self.buttonLoc = (self.buttonLoc[0], self.buffer + self.scale * self.cardSize[1]/2 - self.buttonSize[1]/2)
-		self.buttonLoc = (self.buttonLoc[0], HEIGHT - self.buffer - self.scale * self.cardSize[1]/2 + self.buttonSize[1]/2)
+		#yaccDL put the replace button downside // New Game button location
+		#self.buttonLoc = (self.buttonLoc[0], HEIGHT - self.buffer - self.scale * self.cardSize[1]/2 + self.buttonSize[1]/2)
+		#yaccDL put the replace button rightside
+		self.buttonLoc = (WIDTH - self.buffer-self.buttonSize[0], HEIGHT - self.buffer - self.scale * self.cardSize[1]/2 + self.buttonSize[1]/2)
 
 		self.buttonRect = pygame.Rect(self.buttonLoc, self.buttonSize)
 		self.buttonRectOutline = pygame.Rect(self.buttonLoc, self.buttonSize)
 
 		#initialize variables for drawing the hands
-		self.comp1Loc = (self.buffer, HEIGHT / 2 - self.scale * self.cardSize[1]/2)
-		self.comp2Loc = (WIDTH - int(5 * self.scale * self.cardSize[0]) - self.buffer, HEIGHT / 2 - self.scale * self.cardSize[1]/2)
+		self.comp1Loc = (WIDTH - int(5 * self.scale * self.cardSize[0]) - self.buffer, HEIGHT / 2 - self.scale * self.cardSize[1]/2)    #123-312
 		#yaccDL switch hand and AI up and down
-		#self.comp3Loc = ( 4.5 * int(self.scale * self.cardSize[0]), HEIGHT - self.scale * self.cardSize[1] - self.buffer)
-		self.comp3Loc = ( 4.5 * int(self.scale * self.cardSize[0]), self.buffer)
+		#self.comp2Loc = ( 4.5 * int(self.scale * self.cardSize[0]), HEIGHT - self.scale * self.cardSize[1] - self.buffer)
+		self.comp2Loc = ( 4.5 * int(self.scale * self.cardSize[0]), self.buffer)    #123-312
+		self.comp3Loc = (self.buffer, HEIGHT / 2 - self.scale * self.cardSize[1]/2)    #123-312
 
 		self.result = self.poker.play_round()
 
@@ -225,12 +229,12 @@ class Control:
 		comp2Score = self.poker.convert_score(self.result[2])
 		self.comp2Label = self.font.render(comp2Score, 1, BLACK)
 		self.comp2LabelSize = self.font.size(comp2Score)
-		self.comp2LabelLoc = (self.comp2Loc[0], self.comp2Loc[1] - 30)
+		self.comp2LabelLoc = (self.comp2Loc[0], self.comp2Loc[1] - 30)    #yaccDL switch hand and AI up and down
 
 		comp3Score = self.poker.convert_score(self.result[3])
 		self.comp3Label = self.font.render(comp3Score, 1, BLACK)
 		self.comp3LabelSize = self.font.size(comp3Score)
-		self.comp3LabelLoc = (self.comp3Loc[0], self.comp3Loc[1] - 30)    #yaccDL switch hand and AI up and down
+		self.comp3LabelLoc = (self.comp3Loc[0], self.comp3Loc[1] - 30)
 
 	def results(self):
 		for event in pygame.event.get():
@@ -254,13 +258,13 @@ class Control:
 		#print player hand in the top
 		self.display_hand(self.poker.playerHand, self.cardLoc[0][0], self.cardLoc[0][1])
 
-		#print computer 1 on the left
-		self.display_hand(self.poker.comp1Hand, self.comp1Loc[0], self.comp1Loc[1])
+		#print computer 1 on the right
+		self.display_hand(self.poker.comp1Hand,self.comp1Loc[0], self.comp1Loc[1])
 
-		#print computer 2 on the right
-		self.display_hand(self.poker.comp2Hand,self.comp2Loc[0], self.comp2Loc[1])
+		#print computer 2 on the bottom
+		self.display_hand(self.poker.comp2Hand, self.comp2Loc[0], self.comp2Loc[1])
 
-		#print computer 3 on the bottom
+		#print computer 3 on the left
 		self.display_hand(self.poker.comp3Hand, self.comp3Loc[0], self.comp3Loc[1])
 
 		#print labels saing what each hand was
@@ -295,7 +299,6 @@ class Control:
 		SCREEN.blit(self.comp1ScoreLabel, (10, 40))
 		SCREEN.blit(self.comp2ScoreLabel, (10, 70))
 		SCREEN.blit(self.comp3ScoreLabel, (10, 100))
-
 
 #############################################################
 if __name__ == "__main__":
