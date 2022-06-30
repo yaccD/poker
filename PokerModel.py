@@ -2,6 +2,7 @@ import operator
 import random
 import pygame
 
+""" class Card is obsolete by simple int list, and use cardcode class to do translation
 class Card:
 
 	def __init__(self, rank, suit):
@@ -55,11 +56,71 @@ class Card:
 			out += 'Diamonds'
 
 		return out
+"""
+
+# class cardcode used to mapping DL code to card flower&number
+class cardcode:
+    def __init__(self, regentCode):
+        self.regent = regentCode
+
+    def code(rank, suit):
+        cardFlower = {'D':0,'C':1,'H':2,'S':3,'J':4}
+		
+        if rank == 'A':
+            b = 14
+        elif rank == 'K':
+            b = 13
+        elif rank == 'Q':
+            b = 12
+        elif rank == 'J':
+            b = 11
+        elif rank == 'T':
+            b = 10
+        else:
+            b = int(rank)
+
+        if suit == 'J':
+            return 9000+(b+10)*10
+        else:
+            return cardFlower[suit]*1000+b*10
+
+    def card(self, code):
+        a=[]
+        b=""
+        t=code//1000
+        n=code%1000//10
+        if t==0:
+            a.append('D')
+            a.append(str(n))
+            return b.join(a)
+        elif t==1:
+            a.append('C')
+            a.append(str(n))
+            return b.join(a)
+        elif t==2:
+            a.append('H')
+            a.append(str(n))
+            return b.join(a)
+        elif t==3:
+            a.append('S')
+            a.append(str(n))
+            return b.join(a)
+        elif t==8:
+            a.append('J')
+            a.append(str(n))
+            return b.join(a)
+        else:
+            return 'wrong'
+
+    def imagePath(self, code):
+		#image_path = ""
+        image_path = self.card(code)
+        return 'img/' + image_path + '.png'
 
 #only exists for the __str__ function
 class Hand:
-
 	def __init__(self, hand):
+		#self.hand = hand
 		self.hand = hand
 
 	def __str__(self):
@@ -69,19 +130,21 @@ class Hand:
 		return out
 
 	def __getitem__(self, index):
-		return self.hand[index]
+		return self.handnumber[index]
 
 	def __len__(self):
-		return len(self.hand)
+		return len(self.handnumber)
 
 class Deck:
-
+	#generate a set of poker
 	def __init__(self):
 		self.deck = []
 
 		for suit in ['H','S','C','D']:
 			for rank in range(2,15):
-				self.deck.append(Card(rank, suit))
+				#self.deck.append(Card(rank, suit))    #yaccDL simplify card to list
+				self.deck.append(cardcode.code(rank, suit))    #yaccDL simplify card to list
+				
 
 	def __str__(self):
 		out = ""
@@ -106,8 +169,10 @@ class Deck:
 			card = random.choice(self.deck)
 			self.deck.remove(card)
 			cards.append(card)
+		
+		#yaccDL sort the cards
+		#cards.sort()
 		return cards
-
 
 class Poker:
 
@@ -115,19 +180,27 @@ class Poker:
 		self.deck = Deck()
 		self.scores = [0,0,0,0]
 
-		self.playerHand = Hand(self.deck.deal(5))
-		self.comp1Hand = Hand(self.deck.deal(5))
-		self.comp2Hand = Hand(self.deck.deal(5))
-		self.comp3Hand = Hand(self.deck.deal(5))
+#		self.playerHand = Hand(self.deck.deal(5))    #release Hand class
+#		self.comp1Hand = Hand(self.deck.deal(5))
+#		self.comp2Hand = Hand(self.deck.deal(5))
+#		self.comp3Hand = Hand(self.deck.deal(5))
+		self.playerHand = self.deck.deal(5)
+		self.comp1Hand = self.deck.deal(5)
+		self.comp2Hand = self.deck.deal(5)
+		self.comp3Hand = self.deck.deal(5)
 
 	def __init__(self, scores):
 		self.deck = Deck()
 		self.scores = scores
 
-		self.playerHand = Hand(self.deck.deal(5))
-		self.comp1Hand = Hand(self.deck.deal(5))
-		self.comp2Hand = Hand(self.deck.deal(5))
-		self.comp3Hand = Hand(self.deck.deal(5))
+#		self.playerHand = Hand(self.deck.deal(5))    #release Hand class
+#		self.comp1Hand = Hand(self.deck.deal(5))
+#		self.comp2Hand = Hand(self.deck.deal(5))
+#		self.comp3Hand = Hand(self.deck.deal(5))
+		self.playerHand = self.deck.deal(5)
+		self.comp1Hand = self.deck.deal(5)
+		self.comp2Hand = self.deck.deal(5)
+		self.comp3Hand = self.deck.deal(5)
 
 	#make each computer take a turn
 	def computerReplace(self):
@@ -151,14 +224,16 @@ class Poker:
 		suit = self.get_most_suit(hand)
 		for card in hand:
 			if card.suit != suit:
-				card.selected = True
+				#card.selected = True    #yaccDL mirror select to x000 bit
+				card += 4000
 		self.replace(hand)
 
 	def replace_rank(self, hand):
 		rank = self.get_most_rank(hand)
 		for card in hand:
 			if card.rank != rank:
-				card.selected = True
+				#card.selected = True    #yaccDL mirror select to x000 bit
+				card += 4000				
 		self.replace(hand)
 
 	def AI_replace(self, hand):
@@ -185,7 +260,8 @@ class Poker:
 		count = 0
 		for i in range(3):
 			for card in hand:
-				if card.selected:
+				#if card.selected:    #yaccDL select mirror to x000 bit 
+				if card//1000 >3: 
 					hand.hand.remove(card)
 					count += 1
 

@@ -21,7 +21,8 @@ class Control:
 		self.background = pygame.image.load('img/background.jpg').convert_alpha()
 		self.cardBack = pygame.image.load('img/back.png').convert_alpha()
 		self.cardBack = pygame.transform.scale(self.cardBack,(int(self.scale * self.cardSize[0]), int(self.scale * self.cardSize[1])))
-
+        
+		cc=PokerModel.cardcode(3)
 
 		font = pygame.font.Font('font/CoffeeTin.ttf', 50)
 		loadText = font.render("Loading...", 1, BLACK)
@@ -37,20 +38,10 @@ class Control:
 		pygame.display.flip()
 
 		for card in deck:
-			self.images[str(card)] = pygame.image.load(card.image_path).convert_alpha()
-			self.images[str(card)] = pygame.transform.scale(self.images[str(card)], (int(self.scale * self.cardSize[0]), int(self.scale * self.cardSize[1])))
+			self.images[card] = pygame.image.load(cc.imagePath(card)).convert_alpha()
+			self.images[card] = pygame.transform.scale(self.images[card], (int(self.scale * self.cardSize[0]), int(self.scale * self.cardSize[1])))
 
 		self.start_up_init()
-
-	def main(self):
-		if self.state == 0:
-			self.start_up()
-		elif self.state == 1:
-			self.play()
-		elif self.state == 2:
-			self.results()
-		elif self.state == 3:
-			self.new_game()
 
 	def start_up_init(self):
 		#intitialize items for the startup section of the game
@@ -73,6 +64,16 @@ class Control:
 		self.buttonRectOutline = pygame.Rect(self.buttonLoc, self.buttonSize)
 
 		self.state = 0
+
+	def main(self):
+		if self.state == 0:
+			self.start_up()
+		elif self.state == 1:
+			self.play()
+		elif self.state == 2:
+			self.results()
+		elif self.state == 3:
+			self.new_game()
 
 	def start_up(self):
 
@@ -154,7 +155,12 @@ class Control:
 					for index in reversed(range(len(self.poker.playerHand))):	
 						cardRect = pygame.Rect(self.cardLoc[index], (int(self.scale * self.cardSize[0]), int(self.scale * self.cardSize[1])))
 						if cardRect.colliderect(mouseRect):
-							self.poker.playerHand[index].selected = not self.poker.playerHand[index].selected
+							#self.poker.playerHand[index].selected = not self.poker.playerHand[index].selected
+							#yaccDL mirro selected to x000 bit
+							if self.poker.playerHand[index]//1000 >3:
+								self.poker.playerHand[index] -= 4000
+							else:
+								self.poker.playerHand[index] += 4000
 							break
 
 					#check if we clicked the replaceButton
@@ -172,13 +178,16 @@ class Control:
 
 		#display the player's hand
 		for index in range(len(self.poker.playerHand)):
-			if not self.poker.playerHand[index].selected:
-				SCREEN.blit(self.images[str(self.poker.playerHand[index])], self.cardLoc[index])    #yaccDL switch hand and AI up and down 
+			#if not self.poker.playerHand[index].selected:
+			#yaccDL mirro selected to x000 bit
+			if self.poker.playerHand[index]//1000 <4:
+				SCREEN.blit(self.images[self.poker.playerHand[index]], self.cardLoc[index])    #yaccDL switch hand and AI up and down 
 			else:
 				#make the card a little big higher to signify the chosed card
 				#SCREEN.blit(self.cardBack, (self.cardLoc[index][0],self.cardLoc[index][1]-10))
 				#and do not backside the card, only move the card when chosed                       #yaccDL switch hand and AI up and down
-				SCREEN.blit(self.images[str(self.poker.playerHand[index])], (self.cardLoc[index][0],self.cardLoc[index][1]-10))
+				print(self.poker.playerHand[index],type(self.poker.playerHand[index]))
+				SCREEN.blit(self.images[self.poker.playerHand[index]], (self.cardLoc[index][0],self.cardLoc[index][1]-10))
 
 		#display the text
 		SCREEN.blit(self.youText, self.youLoc)
@@ -216,22 +225,22 @@ class Control:
 		self.result = self.poker.play_round()
 
 		#initialize variables for labeling the hands
-		playerScore = self.poker.convert_score(self.result[0])
+		playerScore = "You:" + self.poker.convert_score(self.result[0])
 		self.youText = self.font.render(playerScore, 1, BLACK)
 		self.youSize = self.font.size(playerScore)
 		self.youLoc = (self.cardLoc[0][0],self.cardLoc[0][1] - 30)    #yaccDL switch hand and AI up and down
 
-		comp1Score = self.poker.convert_score(self.result[1])
+		comp1Score = "C1:" + self.poker.convert_score(self.result[1])
 		self.comp1Label = self.font.render(comp1Score, 1, BLACK)
 		self.comp1LabelSize = self.font.size(comp1Score)
 		self.comp1LabelLoc = (self.comp1Loc[0], self.comp1Loc[1] - 30)
 
-		comp2Score = self.poker.convert_score(self.result[2])
+		comp2Score = "C2:" + self.poker.convert_score(self.result[2])
 		self.comp2Label = self.font.render(comp2Score, 1, BLACK)
 		self.comp2LabelSize = self.font.size(comp2Score)
 		self.comp2LabelLoc = (self.comp2Loc[0], self.comp2Loc[1] - 30)    #yaccDL switch hand and AI up and down
 
-		comp3Score = self.poker.convert_score(self.result[3])
+		comp3Score = "C3:" + self.poker.convert_score(self.result[3])
 		self.comp3Label = self.font.render(comp3Score, 1, BLACK)
 		self.comp3LabelSize = self.font.size(comp3Score)
 		self.comp3LabelLoc = (self.comp3Loc[0], self.comp3Loc[1] - 30)
@@ -285,7 +294,7 @@ class Control:
 
 	def display_hand(self, hand, x, y):    #yaccDL switch hand and AI up and down//display_hand
 		for card in hand:
-			SCREEN.blit(self.images[str(card)], (x, y))    #yaccDL switch hand and AI up and down
+			SCREEN.blit(self.images[card], (x, y))    #yaccDL switch hand and AI up and down
 			x += int(self.scale * self.cardSize[0])/6    #yaccDL overlap cards
 
 	def display_scoreboard(self):
