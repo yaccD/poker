@@ -1,6 +1,7 @@
 import pygame
 import os,sys
 import PokerModel
+import cardcode
 
 HEIGHT = 720    #game canvas height
 WIDTH = 1280    #game canvas width
@@ -21,8 +22,8 @@ class Control:
 		self.background = pygame.image.load('img/background.jpg').convert_alpha()
 		self.cardBack = pygame.image.load('img/back.png').convert_alpha()
 		self.cardBack = pygame.transform.scale(self.cardBack,(int(self.scale * self.cardSize[0]), int(self.scale * self.cardSize[1])))
-        
-		cc=PokerModel.cardcode(3)
+
+		cc=cardcode.cardcode(3)
 
 		font = pygame.font.Font('font/CoffeeTin.ttf', 50)
 		loadText = font.render("Loading...", 1, BLACK)
@@ -38,6 +39,7 @@ class Control:
 		pygame.display.flip()
 
 		for card in deck:
+			print(cc.imagePath(card))
 			self.images[card] = pygame.image.load(cc.imagePath(card)).convert_alpha()
 			self.images[card] = pygame.transform.scale(self.images[card], (int(self.scale * self.cardSize[0]), int(self.scale * self.cardSize[1])))
 
@@ -186,8 +188,7 @@ class Control:
 				#make the card a little big higher to signify the chosed card
 				#SCREEN.blit(self.cardBack, (self.cardLoc[index][0],self.cardLoc[index][1]-10))
 				#and do not backside the card, only move the card when chosed                       #yaccDL switch hand and AI up and down
-				print(self.poker.playerHand[index],type(self.poker.playerHand[index]))
-				SCREEN.blit(self.images[self.poker.playerHand[index]], (self.cardLoc[index][0],self.cardLoc[index][1]-10))
+				SCREEN.blit(self.images[self.poker.playerHand[index] - 4000], (self.cardLoc[index][0],self.cardLoc[index][1]-10))
 
 		#display the text
 		SCREEN.blit(self.youText, self.youLoc)

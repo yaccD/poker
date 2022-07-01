@@ -211,13 +211,14 @@ class Poker:
 	def get_most_suit(self, hand):
 		suits = {'H':0, 'C':0, 'S':0, 'D':0}
 		for card in hand:
-			suits[card.suit] += 1
+			#suits[card.suit] += 1
+			suits[card//1000] += 1
 		return max(suits.items(), key=operator.itemgetter(1))[0]
 
 	def get_most_rank(self, hand):
 		ranks = {1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0, 10:0, 11:0, 12:0, 13:0, 14:0}
 		for card in hand:
-			ranks[card.rank] += 1
+			ranks[card%1000//10] += 1
 		return max(ranks.items(), key=operator.itemgetter(1))[0]
 
 	def replace_suit(self, hand):
@@ -231,7 +232,8 @@ class Poker:
 	def replace_rank(self, hand):
 		rank = self.get_most_rank(hand)
 		for card in hand:
-			if card.rank != rank:
+			#if card.rank != rank:
+			if card%1000//10 != rank:
 				#card.selected = True    #yaccDL mirror select to x000 bit
 				card += 4000				
 		self.replace(hand)
@@ -262,10 +264,12 @@ class Poker:
 			for card in hand:
 				#if card.selected:    #yaccDL select mirror to x000 bit 
 				if card//1000 >3: 
-					hand.hand.remove(card)
+					#hand.hand.remove(card)
+					hand.remove(card)
 					count += 1
 
-		hand.hand.extend(self.deck.deal(count))
+		#hand.hand.extend(self.deck.deal(count)) 
+		hand.extend(self.deck.deal(count))
 
 	#plays a round of poker with 4 hands
 	#winner is displayed and scores for each hand as well
@@ -299,8 +303,10 @@ class Poker:
 		#make a dictionary containing the count of each each
 		cardCount = {2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0, 10:0, 11:0, 12:0, 13:0, 14:0}
 
-		for card in hand.hand:
-			cardCount[card.rank] += 1
+		#for card in hand.hand:
+		#	cardCount[card.rank] += 1
+		for card in hand:
+			cardCount[card%1000/10] += 1
 
 		#count number of unique cards
 		uniqueCount = 0
@@ -371,8 +377,10 @@ class Poker:
 	#a hand is a straight if, when sorted, the current card's rank + 1 is the same as the next card
 	def is_straight(self,hand):
 		values = []
-		for card in hand.hand:
-			values.append(card.rank)
+		#for card in hand.hand:
+		#	values.append(card.rank)
+		for card in hand:
+			values.append(card%1000/10)
 
 		values.sort()
 
@@ -383,8 +391,9 @@ class Poker:
 
 	#a hand is a flush if all the cards are of the same suit
 	def is_flush(self,hand):
-		suit = hand.hand[0].suit
-		for card in hand.hand:
-			if card.suit != suit:
+		#suit = hand.hand[0].suit
+		suit = hand[0]//1000
+		for card in hand:
+			if card//1000 != suit:
 				return False
 		return True

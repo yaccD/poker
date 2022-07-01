@@ -7,9 +7,11 @@ Description: a new DL code method to define card by number, simplify the operati
 
 class cardcode():
     def __init__(self, regentCode):
-        self.regent = regentCode
+         self.regent = regentCode
+#    def __init__(self):
+#        return
 
-    def code(card):
+    def code(self, card):
         cardFlower = {'D':0,'C':1,'H':2,'S':3,'J':4}
         a=card[0]
         b=int(card[1:])
@@ -23,7 +25,7 @@ class cardcode():
         else:
             return cardFlower[a]*1000+b*10
     
-    def card(code):
+    def card(self, code):
         a=[]
         b=""
         t=code//1000
@@ -51,7 +53,11 @@ class cardcode():
         else:
             return 'wrong'
 
-    def graphy(code):
+    def imagePath(self, code):
+        image_name = self.card(code)
+        return 'img/' + image_name + '.png'
+
+    def graphy(self, code):
         pokerlist =(' ',' ',' ','3','4','5','6','7','8','9','10','J','Q','K','A')
         flowerList={0:'♦ ',1:'♣ ',2:'♥ ',3:'♠ ',4:'♦ ',5:'♣ ',6:'♥ ',7:'♠ '}
         a=[]
